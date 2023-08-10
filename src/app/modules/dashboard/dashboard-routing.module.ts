@@ -9,7 +9,7 @@ const routes: Routes = [
     component: DashboardComponent,
     loadChildren: () => import('./router-child.module').then( m => m.RouterChildModule)
   },
-  { path: '**', component: DashboardComponent },
+  // { path: '**', component: DashboardComponent },
 ];
 
 
