@@ -41,7 +41,7 @@ export class CategoryComponent implements OnInit{
         dataCategory.push(category);
       });
 
-      this.dataSource = new MatTableDataSource<CategoryElement>();
+      this.dataSource = new MatTableDataSource<CategoryElement>(dataCategory);
 
     }
 
