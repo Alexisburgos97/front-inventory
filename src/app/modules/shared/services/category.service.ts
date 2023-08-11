@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 
 import {environment} from "../../../../environments/environment";
+import {CategoryElement} from "../../category/components/category/categoryElement.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,10 @@ export class CategoryService {
 
   getCategories(): Observable<any>{
     return this.http.get<any>(`${this.baseUrl}/categories`);
+  }
+
+  saveCategory(category: CategoryElement): Observable<any>{
+    return this.http.post<any>(`${this.baseUrl}/categories`, category);
   }
 
 }
