@@ -51,25 +51,53 @@ export class CategoryComponent implements OnInit{
 
   }
 
-  openCategoryDialog(): void{
+  openCategoryDialog(id: number, name: string = '', description: string = ''): void{
 
-    const dialogRef: MatDialogRef<any> = this.dialog.open( NewCategoryComponent, {
-      width: '450px'
-    });
+    let dialogRef: MatDialogRef<any>;
+    let msg: string = '';
+    let msgError: string = '';
+
+    if( id != 0 && name.trim().length > 0 && description.trim().length > 0 ){
+
+      console.log("actualizar")
+
+      msg = 'Categoría actualizada';
+      msgError = 'Se produjo un error al actualizar la categoría';
+
+      dialogRef = this.dialog.open( NewCategoryComponent, {
+        width: '450px',
+        data: {id: id, name: name, description: description}
+      });
+    }
+    else{
+
+       msg  = 'Categoría agregada"';
+       msgError = 'Se produjo un error al guarda la categoría';
+
+     dialogRef = this.dialog.open( NewCategoryComponent, {
+        width: '450px'
+      });
+    }
 
     dialogRef.afterClosed().subscribe( result => {
 
       if( result == 1 ){
 
-        this.openSnackBar("Categoría agregada", "Exitosa");
+        this.openSnackBar(msg, "Exitosa");
         this.getCategories();
 
       }else if( result == 2 ){
-        this.openSnackBar("Se produjo un error al guarda la categoría", "Error");
+        this.openSnackBar(msgError, "Error");
       }
 
       console.log("se cerro el modal")
     })
+
+  }
+
+  edit(category: CategoryElement): void{
+
+    this.openCategoryDialog(category.id!, category.name, category.description);
 
   }
 
