@@ -30,4 +30,8 @@ export class CategoryService {
     return this.http.delete<any>(`${this.baseUrl}/categories/${id}`);
   }
 
+  getCategoryById(id: number): Observable<any>{
+    return this.http.get<any>(`${this.baseUrl}/categories/${id}`);
+  }
+
 }

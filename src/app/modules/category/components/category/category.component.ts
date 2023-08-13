@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {CategoryService} from "../../../shared/services/category.service";
 import {CategoryElement} from "./categoryElement.interface";
 import {MatTableDataSource} from "@angular/material/table";
@@ -8,6 +8,7 @@ import {NewCategoryComponent} from "../new-category/new-category.component";
 import {MatSnackBar, MatSnackBarRef, SimpleSnackBar} from "@angular/material/snack-bar";
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {ConfirmComponent} from "../../../shared/components/confirm/confirm.component";
+import {MatPaginator} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-category',
@@ -18,6 +19,8 @@ export class CategoryComponent implements OnInit{
 
   displayedColumns: string[] = ['id', 'name', 'description', 'actions'];
   dataSource: MatTableDataSource<CategoryElement> = new MatTableDataSource<CategoryElement>();
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(private categoryService: CategoryService, public dialog: MatDialog, private snackBar: MatSnackBar) {
   }
@@ -48,6 +51,7 @@ export class CategoryComponent implements OnInit{
       });
 
       this.dataSource = new MatTableDataSource<CategoryElement>(dataCategory);
+      this.dataSource.paginator = this.paginator;
 
     }
 
@@ -124,6 +128,21 @@ export class CategoryComponent implements OnInit{
       }
 
     });
+  }
+
+  buscar(term: string): void{
+
+    if(term.length === 0){
+      return this.getCategories();
+    }
+
+    let id: number = +term;
+    if( isNaN(id) ) return this.getCategories();
+
+    this.categoryService.getCategoryById(+term).subscribe( response => {
+        this.processCategoriesResponse(response);
+    });
+
   }
 
   openSnackBar(message: string, action: string): MatSnackBarRef<SimpleSnackBar>{
