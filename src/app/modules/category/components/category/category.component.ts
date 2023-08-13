@@ -6,6 +6,8 @@ import {DialogRef} from "@angular/cdk/dialog";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {NewCategoryComponent} from "../new-category/new-category.component";
 import {MatSnackBar, MatSnackBarRef, SimpleSnackBar} from "@angular/material/snack-bar";
+import {error} from "@angular/compiler-cli/src/transformers/util";
+import {ConfirmComponent} from "../../../shared/components/confirm/confirm.component";
 
 @Component({
   selector: 'app-category',
@@ -99,6 +101,29 @@ export class CategoryComponent implements OnInit{
 
     this.openCategoryDialog(category.id!, category.name, category.description);
 
+  }
+
+  delete(category: CategoryElement): void{
+
+    let dialogRef: MatDialogRef<any>;
+
+    dialogRef = this.dialog.open( ConfirmComponent, {
+      width: '450px',
+      data: {id: category.id}
+    });
+
+    dialogRef.afterClosed().subscribe( result => {
+
+      if( result == 1 ){
+
+        this.openSnackBar("Categoría eliminada", "Exitosa");
+        this.getCategories();
+
+      }else if( result == 2 ){
+        this.openSnackBar("Se produjo un error al eliminar la categoría", "Error");
+      }
+
+    });
   }
 
   openSnackBar(message: string, action: string): MatSnackBarRef<SimpleSnackBar>{
