@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {environment} from "../../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {CategoryElement} from "../../category/components/category/categoryElement.interface";
+import { ProductElement} from "../../product/product/product.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -17,13 +17,13 @@ export class ProductService {
     return this.http.get<any>(`${this.baseUrl}/products`);
   }
 
-  // saveCategory(category: CategoryElement): Observable<any>{
-  //   return this.http.post<any>(`${this.baseUrl}/categories`, category);
-  // }
-  //
-  // updateCategory(category: CategoryElement, id: number): Observable<any>{
-  //   return this.http.put<any>(`${this.baseUrl}/categories/${id}`, category);
-  // }
+  saveProduct(product: FormData): Observable<any>{
+    return this.http.post<any>(`${this.baseUrl}/products`, product);
+  }
+
+  updateProduct(product: ProductElement, id: number): Observable<any>{
+    return this.http.put<any>(`${this.baseUrl}/products/${id}`, product);
+  }
   //
   // deleteCategory(id: number): Observable<any>{
   //   return this.http.delete<any>(`${this.baseUrl}/categories/${id}`);

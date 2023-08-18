@@ -1,10 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
-import {ProductElemen} from "./product.interface";
+import {ProductElement} from "./product.interface";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar, MatSnackBarRef, SimpleSnackBar} from "@angular/material/snack-bar";
 import {ProductService} from "../../shared/services/product.service";
+import {NewProductComponent} from "../new-product/new-product.component";
 
 @Component({
   selector: 'app-product',
@@ -14,7 +15,7 @@ import {ProductService} from "../../shared/services/product.service";
 export class ProductComponent implements OnInit{
 
   displayedColumns: string[] = ['id', 'name', 'price', 'account', 'category', 'picture', 'actions'];
-  dataSource: MatTableDataSource<ProductElemen> = new MatTableDataSource<ProductElemen>();
+  dataSource: MatTableDataSource<ProductElement> = new MatTableDataSource<ProductElement>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -39,13 +40,13 @@ export class ProductComponent implements OnInit{
 
   processProductsResponse(resp: any): void{
 
-    let dataProducts: ProductElemen[] = [];
+    let dataProducts: ProductElement[] = [];
 
     if( resp.metadata[0].code == '00' ){
 
       let listProducts = resp.product.products;
 
-      listProducts.forEach( (product: ProductElemen): void => {
+      listProducts.forEach( (product: ProductElement): void => {
 
         product.category = product.category.name;
         product.picture = 'data:image/jpeg;base64,' + product.picture;
@@ -53,7 +54,7 @@ export class ProductComponent implements OnInit{
         dataProducts.push(product);
       });
 
-      this.dataSource = new MatTableDataSource<ProductElemen>(dataProducts);
+      this.dataSource = new MatTableDataSource<ProductElement>(dataProducts);
       this.dataSource.paginator = this.paginator;
     }
 
@@ -61,7 +62,7 @@ export class ProductComponent implements OnInit{
 
   openProductDialog(id: number, name: string = '', description: string = ''): void{
 
-    /*let dialogRef: MatDialogRef<any>;
+    let dialogRef: MatDialogRef<any>;
     let msg: string = '';
     let msgError: string = '';
 
@@ -72,17 +73,17 @@ export class ProductComponent implements OnInit{
       msg = 'Producto actualizado';
       msgError = 'Se produjo un error al actualizar el producto';
 
-      dialogRef = this.dialog.open( NewCategoryComponent, {
+      dialogRef = this.dialog.open( NewProductComponent, {
         width: '450px',
         data: {id: id, name: name, description: description}
       });
     }
     else{
 
-      msg  = 'Categoría agregada"';
-      msgError = 'Se produjo un error al guarda la categoría';
+      msg  = 'Producto agregado"';
+      msgError = 'Se produjo un error al guarda el producto';
 
-      dialogRef = this.dialog.open( NewCategoryComponent, {
+      dialogRef = this.dialog.open( NewProductComponent, {
         width: '450px'
       });
     }
@@ -92,24 +93,24 @@ export class ProductComponent implements OnInit{
       if( result == 1 ){
 
         this.openSnackBar(msg, "Exitosa");
-        this.getCategories();
+        this.getProducts();
 
       }else if( result == 2 ){
         this.openSnackBar(msgError, "Error");
       }
 
       console.log("se cerro el modal")
-    })*/
+    })
 
   }
 
-  edit(product: ProductElemen): void{
+  edit(product: ProductElement): void{
 
     // this.openCategoryDialog(category.id!, category.name, category.description);
 
   }
 
-  delete(product: ProductElemen): void{
+  delete(product: ProductElement): void{
 
     // let dialogRef: MatDialogRef<any>;
     //
