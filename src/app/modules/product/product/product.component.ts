@@ -6,6 +6,7 @@ import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar, MatSnackBarRef, SimpleSnackBar} from "@angular/material/snack-bar";
 import {ProductService} from "../../shared/services/product.service";
 import {NewProductComponent} from "../new-product/new-product.component";
+import {ConfirmComponent} from "../../shared/components/confirm/confirm.component";
 
 @Component({
   selector: 'app-product',
@@ -48,7 +49,7 @@ export class ProductComponent implements OnInit{
 
       listProducts.forEach( (product: ProductElement): void => {
 
-        product.category = product.category.name;
+        // product.category = product.category.name;
         product.picture = 'data:image/jpeg;base64,' + product.picture;
 
         dataProducts.push(product);
@@ -60,13 +61,13 @@ export class ProductComponent implements OnInit{
 
   }
 
-  openProductDialog(id: number, name: string = '', description: string = ''): void{
+  openProductDialog(product: ProductElement | any): void{
 
     let dialogRef: MatDialogRef<any>;
     let msg: string = '';
     let msgError: string = '';
 
-    if( id != 0 && name.trim().length > 0 && description.trim().length > 0 ){
+    if( product != null || product != undefined ){
 
       console.log("actualizar")
 
@@ -75,7 +76,13 @@ export class ProductComponent implements OnInit{
 
       dialogRef = this.dialog.open( NewProductComponent, {
         width: '450px',
-        data: {id: id, name: name, description: description}
+        data: {
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          account: product.account,
+          category: product.category
+        }
       });
     }
     else{
@@ -106,31 +113,31 @@ export class ProductComponent implements OnInit{
 
   edit(product: ProductElement): void{
 
-    // this.openCategoryDialog(category.id!, category.name, category.description);
+    this.openProductDialog(product);
 
   }
 
   delete(product: ProductElement): void{
 
-    // let dialogRef: MatDialogRef<any>;
-    //
-    // dialogRef = this.dialog.open( ConfirmComponent, {
-    //   width: '450px',
-    //   data: {id: category.id}
-    // });
-    //
-    // dialogRef.afterClosed().subscribe( result => {
-    //
-    //   if( result == 1 ){
-    //
-    //     this.openSnackBar("Categoría eliminada", "Exitosa");
-    //     this.getCategories();
-    //
-    //   }else if( result == 2 ){
-    //     this.openSnackBar("Se produjo un error al eliminar la categoría", "Error");
-    //   }
-    //
-    // });
+    let dialogRef: MatDialogRef<any>;
+
+    dialogRef = this.dialog.open( ConfirmComponent, {
+      width: '450px',
+      data: {id: product.id, module: "product"}
+    });
+
+    dialogRef.afterClosed().subscribe( result => {
+
+      if( result == 1 ){
+
+        this.openSnackBar("Producto eliminado", "Exitosa");
+        this.getProducts();
+
+      }else if( result == 2 ){
+        this.openSnackBar("Se produjo un error al eliminar el producto", "Error");
+      }
+
+    });
   }
 
   buscar(term: string): void{

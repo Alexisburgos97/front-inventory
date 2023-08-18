@@ -66,15 +66,13 @@ export class NewProductComponent implements OnInit{
     //Actualizar
     if( this.data != null ){
 
-      console.log("data 2", data)
-
-      /*this.dialogRef.updateProduct(data, this.data.id).subscribe( response => {
+      this.productService.updateProduct(uploadImageData, this.data.id).subscribe( response => {
         console.log("actualizar",response)
         this.dialogRef.close(1);
       }, error => {
         console.log("error new category update");
         this.dialogRef.close(2);
-      });*/
+      });
 
     }
     //Guardar
@@ -102,7 +100,10 @@ export class NewProductComponent implements OnInit{
 
     this.productForm = this.fb.group({
       name: [data.name, Validators.required],
-      description: [data.description, Validators.required]
+      price: [data.price, Validators.required],
+      account: [data.account, Validators.required],
+      category: [data.category.id, Validators.required],
+      picture: ['', Validators.required]
     });
 
   }
