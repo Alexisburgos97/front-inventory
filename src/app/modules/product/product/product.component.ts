@@ -43,7 +43,7 @@ export class ProductComponent implements OnInit{
 
     let dataProducts: ProductElement[] = [];
 
-    if( resp.metadata[0].code == '00' ){
+    if( resp.metadata != undefined &&  resp?.metadata[0]?.code == '00' ){
 
       let listProducts = resp.product.products;
 
@@ -55,6 +55,9 @@ export class ProductComponent implements OnInit{
         dataProducts.push(product);
       });
 
+      this.dataSource = new MatTableDataSource<ProductElement>(dataProducts);
+      this.dataSource.paginator = this.paginator;
+    }else{
       this.dataSource = new MatTableDataSource<ProductElement>(dataProducts);
       this.dataSource.paginator = this.paginator;
     }
@@ -140,18 +143,17 @@ export class ProductComponent implements OnInit{
     });
   }
 
-  buscar(term: string): void{
+  buscar(name: string): void{
 
-    // if(term.length === 0){
-    //   return this.getCategories();
-    // }
-    //
-    // let id: number = +term;
-    // if( isNaN(id) ) return this.getCategories();
-    //
-    // this.categoryService.getCategoryById(+term).subscribe( response => {
-    //   this.processCategoriesResponse(response);
-    // });
+    if(name.length === 0){
+      return this.getProducts();
+    }
+
+    this.productService.getProductByName(name).subscribe( response => {
+      this.processProductsResponse(response);
+    }, error => {
+      this.processProductsResponse(error);
+    });
 
   }
 
